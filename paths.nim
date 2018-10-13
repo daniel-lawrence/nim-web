@@ -4,6 +4,8 @@ import macros
 import templates
 import autoindent
 
+export tables.toTable
+
 func methodStrFormat(methodType: string): string =
     case methodType:
     of "HEAD": "HttpHead"
