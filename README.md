@@ -11,15 +11,26 @@ var myApi = apiMap:
 This will automatically expand to:
 
 ```nim
-var myApi = APIMap({
-    "/": APIResource(
+var myApi = APIMap[DefaultHandler]({
+    "/": APIResource[DefaultHandler](
         children: {
-            "index": APIResource(
+            "index": APIResource[DefaultHandler](
                 methods: @[
-                    APIEndpoint(httpMethod: HttpGet, handler: indexHandler),
+                    APIEndpoint[DefaultHandler](httpMethod: HttpGet, handler: indexHandler),
                 ],
             ),
         }.toTable,
     ),
 }.toTable)
 ```
+
+By default, handlers procedures must have the `DefaultHandler` type. To use other types of handlers, a custom handler type may be passed as the first argument to the macro. For example:
+
+```nim
+type MyHandlerType = proc(jsonStr: string): string
+var myApi = apiMap(MyHandlerType):
+    "index":
+        GET: indexHandler
+```
+
+This will allow `indexHandler` to be any procedure that takes a string and returns another string.
