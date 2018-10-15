@@ -28,6 +28,13 @@ var myApi = APIMap[DefaultHandler]({
 }.toTable)
 ```
 
+Also note that top-level endpoints are treated as methods attached to the root (`"/"`):
+
+```nim
+var myApi = apiMap:
+    GET: indexHandler # responds to GET requests to "/"
+```
+
 By default, handlers procedures must have the `DefaultHandler` type. To use other types of handlers, a custom handler type may be passed as the first argument to the macro. For example:
 
 ```nim
