@@ -3,9 +3,13 @@
 This is a work in progress. The only useful part of this is a macro that adds a small DSL for defining REST APIs. An example:
 
 ```nim
+import multiplexer
+
 var myApi = apiMap:
     "index":
         GET: indexHandler
+
+discard myApi.findHandler("/index", HttpGet) # returns indexHandler proc
 ```
 
 This will automatically expand to:

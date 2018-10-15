@@ -2,12 +2,13 @@ from asynchttpserver import Request, HttpMethod
 import tables
 import macros
 import templates
-import autoindent
 import typetraits
+
+import autoindent
 
 export tables.toTable
 
-func methodStrFormat(methodType: string): string =
+func methodStrFormat(methodType: string): string {.compileTime.} =
     case methodType:
     of "HEAD": "HttpHead"
     of "GET": "HttpGet"
@@ -18,21 +19,13 @@ func methodStrFormat(methodType: string): string =
     of "OPTIONS": "HttpOptions"
     of "CONNECT": "HttpConnect"
     of "PATCH": "HttpPatch"
-    else: "HttpGet"
+    else:
+        warning "Unknown HTTP method: " & methodType
+        "HttpGet"
 
-# Defines types meant for use by consumers of the path produced by the apiMap macro
+# Intermediate types used in macro processing
 type
     DefaultHandler* = proc (r: Request)
-    APIMap*[H] = Table[string, APIResource[H]]
-    APIEndpoint*[H] = object
-        httpMethod: HttpMethod
-        handler: H
-    APIResource*[H] = object
-        children: APIMap[H]
-        methods: seq[APIEndpoint[H]]
-
-# Defines intermediate types, used in macro processing
-type
     IntmEndpoint = tuple[methodType: string, fn: string]
     IntmSubpath = object
         path: string
